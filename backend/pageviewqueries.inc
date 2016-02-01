@@ -63,15 +63,43 @@ function getpageviewsonline($page, $month, $language)
       $weightedexternalquerycount = $weightedexternalquerycount + $recentmonthslowdownfactor;
   else
       $weightedexternalquerycount++;
-  $url = getpageviewsurl($page,$month,$language);
-  $html = file_get_contents($url);
-  preg_match('/(?<=\bhas been viewed)\s+\K[^\s]+/',$html,$numberofpageviews);
-  if (count($numberofpageviews) > 0)
-    if (strlen($numberofpageviews[0]) > 0)
-	{
-	  $externalquerycount++;
-	  return $numberofpageviews[0];
-	}
+  if ($month < 201601)
+  {
+    $url = getpageviewsurl($page,$month,$language);
+    $html = file_get_contents($url);
+    preg_match('/(?<=\bhas been viewed)\s+\K[^\s]+/',$html,$numberofpageviews);
+    if (count($numberofpageviews) > 0)
+      if (strlen($numberofpageviews[0]) > 0)
+      {
+        $externalquerycount++;
+        return $numberofpageviews[0];
+      }
+  }
+  else
+  {
+    # Calculate string of the first date of next month (used as upper limit of
+    # query)
+    $year = intval(substr($month, 0, 4));
+    $justMonth = intval(substr($month, 4));
+    if (intval($justMonth) === 12)
+    {
+      $startNextMonth = strval($year + 1) . "0101";
+    }
+    else
+    {
+      $startNextMonth = strval(intval($month) + 1) . "01";
+    }
+    # set user agent here
+    $url = "http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/" . $language . ".wikipedia/desktop/user/" . $page . "/daily/" . $month . "01/" . $startNextMonth;
+    $html = file_get_contents($url);
+    $json = json_decode($html,true);
+    $sum = 0;
+    foreach ($json["items"] as $day)
+    {
+      $sum += intval($day["views"]);
+    }
+    return $sum;
+  }
   return getpageviewsonline($page, $month, $language);
 }
 
