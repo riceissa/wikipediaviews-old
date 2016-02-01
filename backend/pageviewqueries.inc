@@ -92,6 +92,11 @@ function getpageviewsonline($page, $month, $language)
     ini_set('user_agent', 'Wikipedia Views (wikipediaviews.org)');
     $url = "http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/" . $language . ".wikipedia/desktop/user/" . $page . "/daily/" . $month . "01/" . $startNextMonth;
     $html = file_get_contents($url);
+    if (!$html)
+    {
+      # downloading the json failed, just return 0
+      return 0;
+    }
     $json = json_decode($html,true);
     $sum = 0;
     foreach ($json["items"] as $day)
