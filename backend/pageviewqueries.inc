@@ -89,7 +89,7 @@ function getpageviewsonline($page, $month, $language)
     {
       $startNextMonth = strval(intval($month) + 1) . "01";
     }
-    # set user agent here
+    ini_set('user_agent', 'Wikipedia Views (wikipediaviews.org)');
     $url = "http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/" . $language . ".wikipedia/desktop/user/" . $page . "/daily/" . $month . "01/" . $startNextMonth;
     $html = file_get_contents($url);
     $json = json_decode($html,true);
