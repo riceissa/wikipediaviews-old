@@ -1,6 +1,11 @@
 wikipediaviews
 ==============
 
+**This repository is old.
+For my actual fork, see <https://github.com/riceissa/wikipediaviews>.
+The new repository isn't listed as a fork because GitHub doesn't
+allow multiple forks from the same account.**
+
 Underlying code of http://wikipediaviews.org with sensitive parts redacted
 
 GitHub URL: https://github.com/vipulnaik/wikipediaviews
